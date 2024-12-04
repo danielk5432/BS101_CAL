@@ -1,3 +1,7 @@
+# jott datt dda
+# dgadfgadsgfads
+# 
+
 import pygame
 import numpy as np
 
