@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 
 Width, Height = 800, 600
+###
 
 def init_goal():
     min_vert, max_vert = 4, 10
