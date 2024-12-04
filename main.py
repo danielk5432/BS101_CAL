@@ -3,8 +3,6 @@ import numpy as np
 
 Width, Height = 800, 600
 
-print("Hello World!")
-
 def init_goal():
     min_vert, max_vert = 4, 10
     min_area, max_area = 500, 4500
