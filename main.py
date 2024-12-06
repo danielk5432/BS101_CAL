@@ -1,5 +1,6 @@
 import pygame
 import numpy as np
+from game_logic import *
 
 Width, Height = 800, 600
 
@@ -37,25 +38,30 @@ play, num_vertices, xy = True, 0, []
 target_vertices, target_area = init_goal()
 display_goal(screen, target_vertices, target_area)
 
+isdrawn = False
+
 while play:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             play = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             print(event.button) # 1:left 2:middle 3:right
+            if event.button == 2 or isdrawn:
+                isdrawn = False
+                screen.fill((0, 0, 0))
+                num_vertices, xy = 0, []
+                target_vertices, target_area = init_goal()
+                display_goal(screen, target_vertices, target_area)
             if event.button == 1:
                 num_vertices += 1
                 x, y = pygame.mouse.get_pos()
                 xy.append((x, y))
                 pygame.draw.circle(screen, (255, 255, 255), (x, y), 3)
-            if event.button == 3:
+            if event.button == 3 and num_vertices > 2:
                 pygame.draw.polygon(screen, (255, 255, 255), xy)
                 display_area(screen, xy)
-            if event.button == 2:
-                screen.fill((0, 0, 0))
-                num_vertices, xy = 0, []
-                target_vertices, target_area = init_goal()
-                display_goal(screen, target_vertices, target_area)
+                isdrawn = True
+
     pygame.display.flip()
 
 pygame.quit()
