@@ -3,14 +3,13 @@ import numpy as np
 from shape import Edge
 
 class Draw:
-    def __init__(self, screen, color = (255, 255, 255), width = 3, ui = None):
+    def __init__(self, screen, color = (255, 255, 255), width = 3):
         self.screen = screen
         self.node = []
         self.edge = []
         self.color = color
         self.width = width
         self.finished =False
-        self.ui = ui
 
     def node_add(self, x, y):
         p1 = (x, y)
@@ -47,6 +46,14 @@ class Draw:
         self.edge.append(e1)
         pygame.draw.polygon(self.screen, self.color, self.node)
         self.finished = True
+    
+    def area(self):
+        xy = np.array(self.node)/10
+        xy -= np.array([40, 30])
+        sum = 0
+        for i in range(len(xy)):
+            sum += xy[i][0]*xy[(i+1)%len(xy)][1] - xy[i][1]*xy[(i+1)%len(xy)][0]
+        return abs(sum)/2
 
     def reset(self):
         self.node = []

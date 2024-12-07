@@ -13,14 +13,14 @@ screen = pygame.display.set_mode((Width, Height))
 clock = pygame.time.Clock()
 
 # 상태 플래그
-state = State(screen, font, Width, Height)
+
 
 # 게임 루프
 running = True
 current_shape = Shape()
 current_draw = Draw(screen)
 
-
+state = State(screen, font, Width, Height, current_shape, current_draw)
 
 while running:
 
@@ -53,6 +53,7 @@ while running:
                     current_draw.node_add(x, y)
                 if event.button == 3:
                     current_draw.finish_shape()
+                    state.print_draw_area()
             
 
     pygame.display.flip()

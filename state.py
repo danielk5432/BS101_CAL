@@ -5,21 +5,22 @@ from ui import UI
 
 
 class State:
-    def __init__(self, screen, font, Width, Height):
+    def __init__(self, screen, font, Width, Height, shape, draw):
         self.state = "START"
         self.state_list = ["START", "CHECK", "DRAW", "GAMEOVER"]
-        #self.ui = UI(screen)
         self.screen = screen
         self.font = font
         self.width = Width
         self.height = Height
+        self.shape = shape
+        self.draw = draw
 
         # text
         self.start_text = font.render("Press SPACE to Start", True, (255, 255, 255))
         self.end_text = self.font.render("GAME OVER press SPACE to restart", True, (255, 255, 255))
 
         # start screen
-        screen.blit(self.start_text, (Width // 2 - 150, Height // 2))
+        self.reset()
 
         
 
@@ -45,3 +46,16 @@ class State:
         if isinstance(other, str) and other in self.state_list:
             self.state = other
             self.reset()
+
+    def print_draw_area(self):
+        area = self.draw.area()
+        text = self.font.render(f'Area: %d'%area, True, (255, 255, 255))
+        self.screen.blit(text, (20 , 15))
+
+"""
+    def update_draw(self, draw):
+        self.draw = draw
+
+    def update_shape(self, shape):
+        self.shape = shape
+"""
