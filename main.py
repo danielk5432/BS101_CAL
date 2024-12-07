@@ -1,67 +1,59 @@
 import pygame
 import numpy as np
-from game_logic import *
+from shape import Shape
+from draw import Draw
+from state import State
 
+# 게임 설정
 Width, Height = 800, 600
-
-def init_goal():
-    min_vert, max_vert = 4, 10
-    min_area, max_area = 500, 4500
-    target_vertices = np.random.randint(min_vert, max_vert)
-    target_area = int(min_area + (max_area - min_area)*np.random.rand())
-    return target_vertices, target_area
-
-def display_goal(screen, target_vertices, target_area):
-    text = font.render(f'Number of Vertex: %d'%target_vertices, True, (255, 255, 255))
-    screen.blit(text, (Width-350 , Height-100))
-    text = font.render(f'Target Area: %d'%target_area, True, (255, 255, 255))
-    screen.blit(text, (Width-350 , Height-50))
-
-def display_area(screen, xy):
-    text = font.render(f'%.1f'%area(xy), True, (255, 255, 255))
-    screen.blit(text, (20, 5))
-
-def area(xy):
-    xy = np.array(xy)/10
-    xy -= np.array([40, 30])
-    sum = 0
-    for i in range(len(xy)):
-        sum += xy[i][0]*xy[(i+1)%len(xy)][1] - xy[i][1]*xy[(i+1)%len(xy)][0]
-    return abs(sum)/2
-
 pygame.init()
 pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 30)
 screen = pygame.display.set_mode((Width, Height))
+clock = pygame.time.Clock()
+draw_try = 5
 
-play, num_vertices, xy = True, 0, []
-target_vertices, target_area = init_goal()
-display_goal(screen, target_vertices, target_area)
+# 게임 루프
+running = True
+current_shape = Shape()
+current_draw = Draw(screen)
 
-isdrawn = False
+state = State(screen, font, Width, Height, current_shape, current_draw, draw_try)
 
-while play:
+while running:
+
+    current_shape.draw(screen)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            play = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print(event.button) # 1:left 2:middle 3:right
-            if event.button == 2 or isdrawn:
-                isdrawn = False
-                screen.fill((0, 0, 0))
-                num_vertices, xy = 0, []
-                target_vertices, target_area = init_goal()
-                display_goal(screen, target_vertices, target_area)
-            if event.button == 1:
-                num_vertices += 1
-                x, y = pygame.mouse.get_pos()
-                xy.append((x, y))
-                pygame.draw.circle(screen, (255, 255, 255), (x, y), 3)
-            if event.button == 3 and num_vertices > 2:
-                pygame.draw.polygon(screen, (255, 255, 255), xy)
-                display_area(screen, xy)
-                isdrawn = True
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+
+            if (state == "START" or state == "GAMEOVER") and event.key == pygame.K_SPACE:
+                state.change_state("CHECK")
+                current_shape.generate_random_shape()
+
+            # GAMEOVER DEBUG
+            if event.key == pygame.K_0:
+                state.change_state("GAMEOVER")
+                
+
+        if state == "CHECK":
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print(event.button) # 1:left 2:middle 3:right
+                if event.button == 2:
+                    state.reset()
+                if event.button == 1:
+                    x, y = pygame.mouse.get_pos()
+                    current_draw.node_add(x, y)
+                if event.button == 3:
+                    if current_draw.finish_shape():
+                        state.print_draw_area()
+            
 
     pygame.display.flip()
+    clock.tick(60)
 
 pygame.quit()
