@@ -68,8 +68,8 @@ class Shape:
 
     def generate_random_shape(self):
         shapes = ["triangle", "square", "rectangle", "pentagon", "star"]
-        self.type = np.random.choice(shapes)
-
+        #self.type = np.random.choice(shapes)
+        self.type = "star"
         # 중심과 크기 설정
         center_x, center_y = np.random.randint(100, 700), np.random.randint(100, 500)
         size = np.random.randint(50, 100)
@@ -98,17 +98,21 @@ class Shape:
             angle = np.linspace(0, 2 * np.pi, 6)
             self.vertices = [(center_x + size * np.cos(a), center_y + size * np.sin(a)) for a in angle[:-1]]
         elif self.type == "star":
+            outer_radius = size
+            inner_radius = outer_radius * np.sin(np.radians(18)) / np.cos(np.radians(36))  # 정오각형 별의 경우
+
+            # 꼭짓점 계산
             self.vertices = [
-                (center_x, center_y - size),
-                (center_x + size // 2, center_y - size // 3),
-                (center_x + size, center_y),
-                (center_x + size // 3, center_y + size // 2),
-                (center_x + size // 2, center_y + size),
-                (center_x, center_y + size // 3),
-                (center_x - size // 2, center_y + size),
-                (center_x - size // 3, center_y + size // 2),
-                (center_x - size, center_y),
-                (center_x - size // 2, center_y - size // 3),
+                (center_x + outer_radius, center_y),  # 꼭짓점 1 (외곽)
+                (center_x + inner_radius * np.sin(np.radians(54)), center_y - inner_radius * np.cos(np.radians(54))),  # 꼭짓점 2 (내부)
+                (center_x + outer_radius * np.sin(np.radians(18)), center_y - outer_radius * np.cos(np.radians(18))),  # 꼭짓점 3 (외곽)
+                (center_x + inner_radius * np.sin(np.radians(-18)), center_y - inner_radius * np.cos(np.radians(-18))),  # 꼭짓점 4 (내부)
+                (center_x + outer_radius * np.sin(np.radians(-54)), center_y - outer_radius * np.cos(np.radians(-54))),  # 꼭짓점 5 (외곽)
+                (center_x + inner_radius * np.sin(np.radians(-90)), center_y - inner_radius * np.cos(np.radians(-90))),  # 꼭짓점 6 (내부)
+                (center_x + outer_radius * np.sin(np.radians(-126)), center_y - outer_radius * np.cos(np.radians(-126))),  # 꼭짓점 7 (외곽)
+                (center_x + inner_radius * np.sin(np.radians(-162)), center_y - inner_radius * np.cos(np.radians(-162))),  # 꼭짓점 8 (내부)
+                (center_x + outer_radius * np.sin(np.radians(-198)), center_y - outer_radius * np.cos(np.radians(-198))),  # 꼭짓점 9 (외곽)
+                (center_x + inner_radius * np.sin(np.radians(-234)), center_y - inner_radius * np.cos(np.radians(-234))),  # 꼭짓점 10 (내부)
             ]
 
     def draw(self, screen):
@@ -134,7 +138,7 @@ class Shape:
         self.edges.extend(edge_lst[1:])
         return edge_lst[1:]
         
-    def get_intersections(self, new_edge: 'Edge'|None = None) -> Tuple[List[Tuple[int, int]], List['Edge']] | None:
+    def get_intersections(self, new_edge: Edge|None = None) -> Tuple[List[Tuple[int, int]], List['Edge']] | None:
         if (len(self.edges) == 0):
             return None
         temp_edge_lst = self.edges.copy()

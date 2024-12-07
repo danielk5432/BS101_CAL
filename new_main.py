@@ -51,6 +51,7 @@ while running:
                 print(event.button) # 1:left 2:middle 3:right
                 if event.button == 2:
                     current_draw.reset()
+                    screen.fill((0, 0, 0))
                 if event.button == 1:
                     x, y = pygame.mouse.get_pos()
                     current_draw.node_add(x, y)
