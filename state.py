@@ -36,9 +36,9 @@ class State:
         if self.state == "START":
             self.screen.blit(self.start_text, (self.width // 2 - 150, self.height // 2))
         if self.state == "CHECK":
-            pass
+            self.draw.reset()
         if self.state == "DRAW":
-            pass
+            self.draw.reset()
         if self.state == "GAMEOVER":
             self.screen.blit(self.end_text, (self.width // 2 - 250, self.height // 2))
 

@@ -46,14 +46,13 @@ while running:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 print(event.button) # 1:left 2:middle 3:right
                 if event.button == 2:
-                    current_draw.reset()
-                    screen.fill((0, 0, 0))
+                    state.reset()
                 if event.button == 1:
                     x, y = pygame.mouse.get_pos()
                     current_draw.node_add(x, y)
                 if event.button == 3:
-                    current_draw.finish_shape()
-                    state.print_draw_area()
+                    if current_draw.finish_shape():
+                        state.print_draw_area()
             
 
     pygame.display.flip()

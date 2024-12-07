@@ -157,3 +157,6 @@ class Shape:
                     intersections.append(e1.intersection_point(e2))
                     intersecting_edges.append((e1, e2))
         return intersections, intersecting_edges
+    
+    def get_vertices(self):
+        return self.vertices.copy()
