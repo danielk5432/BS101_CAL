@@ -57,7 +57,7 @@ class Draw:
         return abs(sum)/2
     
     def intersect_area(self, shape):
-        # check area
+        # check area not implemented
         area = 0
         return area
 

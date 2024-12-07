@@ -11,16 +11,14 @@ pygame.font.init()
 font = pygame.font.SysFont('Comic Sans MS', 30)
 screen = pygame.display.set_mode((Width, Height))
 clock = pygame.time.Clock()
-
-# 상태 플래그
-
+draw_try = 5
 
 # 게임 루프
 running = True
 current_shape = Shape()
 current_draw = Draw(screen)
 
-state = State(screen, font, Width, Height, current_shape, current_draw)
+state = State(screen, font, Width, Height, current_shape, current_draw, draw_try)
 
 while running:
 
@@ -34,7 +32,7 @@ while running:
                 running = False
 
             if (state == "START" or state == "GAMEOVER") and event.key == pygame.K_SPACE:
-                state.change_state("DRAW")
+                state.change_state("CHECK")
                 current_shape.generate_random_shape()
 
             # GAMEOVER DEBUG
@@ -42,7 +40,7 @@ while running:
                 state.change_state("GAMEOVER")
                 
 
-        if state == "DRAW":
+        if state == "CHECK":
             if event.type == pygame.MOUSEBUTTONDOWN:
                 print(event.button) # 1:left 2:middle 3:right
                 if event.button == 2:

@@ -5,7 +5,7 @@ from ui import UI
 
 
 class State:
-    def __init__(self, screen, font, Width, Height, shape, draw):
+    def __init__(self, screen, font, Width, Height, shape, draw, check_try):
         self.state = "START"
         self.state_list = ["START", "CHECK", "DRAW", "GAMEOVER"]
         self.screen = screen
@@ -14,15 +14,15 @@ class State:
         self.height = Height
         self.shape = shape
         self.draw = draw
-
-        # text
-        self.start_text = font.render("Press SPACE to Start", True, (255, 255, 255))
-        self.end_text = self.font.render("GAME OVER press SPACE to restart", True, (255, 255, 255))
+        self.max_check_try = check_try
+        self.check_try = 0
+        self.ui = UI(screen, font, Width, Height, self)
 
         # start screen
         self.reset()
 
-        
+    def get_state(self):
+        return self.state
 
     def __eq__(self, other):
         if isinstance(other, str):
@@ -32,25 +32,24 @@ class State:
         return f"State({self.state})"
     
     def reset(self):
-        self.screen.fill((0, 0, 0))
+        self.ui.update()
         if self.state == "START":
-            self.screen.blit(self.start_text, (self.width // 2 - 150, self.height // 2))
+            pass
         if self.state == "CHECK":
             self.draw.reset()
         if self.state == "DRAW":
             self.draw.reset()
         if self.state == "GAMEOVER":
-            self.screen.blit(self.end_text, (self.width // 2 - 250, self.height // 2))
-
+            pass
     def change_state(self, other):
         if isinstance(other, str) and other in self.state_list:
             self.state = other
             self.reset()
 
     def print_draw_area(self):
-        area = self.draw.area()
-        text = self.font.render(f'Area: %d'%area, True, (255, 255, 255))
-        self.screen.blit(text, (20 , 15))
+        self.ui.print_draw_area(self.draw, self.shape)
+        self.check_try += 1
+
 
 """
     def update_draw(self, draw):
