@@ -15,7 +15,7 @@ draw_try = 5
 
 # 게임 루프
 running = True
-current_shape = Shape()
+current_shape = Shape(screen)
 current_draw = Draw(screen)
 
 state = State(screen, font, Width, Height, current_shape, current_draw, draw_try)

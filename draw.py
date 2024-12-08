@@ -7,7 +7,7 @@ class Draw:
         self.screen = screen
         self.node = []
         self.edge = []
-        self.shape = Shape()
+        self.shape = Shape(screen)
         self.color = color
         self.width = width
         self.finished =False

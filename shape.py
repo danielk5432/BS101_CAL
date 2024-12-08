@@ -83,10 +83,11 @@ class Edge:
 
 
 class Shape:
-    def __init__(self):
+    def __init__(self, screen):
         self.vertices = []
         self.edges = []
         self.area = 0
+        self.screen = screen
     def get_vertices(self):
         return self.vertices.copy()
     def get_edges(self):
@@ -221,8 +222,8 @@ class Shape:
         반환값: 클리핑 후 남는 다각형
         """
         output_list = sutherland_hodgman_clip(self.get_vertices(), clip_polygon.get_vertices())
-
-        new_shape = Shape()
+        new_shape = Shape(self.screen)
         if len(output_list) > 0:
             new_shape.generate_user_shape(output_list)
+        new_shape.draw(self.screen)
         return new_shape
