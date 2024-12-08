@@ -151,7 +151,7 @@ class Shape:
 
     def draw(self, screen, color = (0, 255, 0), width = 2):
         if len(self.vertices) > 2:
-            pygame.draw.polygon(screen, color, self.vertices, width)
+            pygame.draw.polygon(screen, color, self.vertices)
 
     def make_edge(self, p1: Tuple[float, float], p2: Tuple[float, float]) -> 'Edge':
         """두 점으로 Edge 생성하고 리스트에 추가한 뒤 추가된 Edge 반환"""
