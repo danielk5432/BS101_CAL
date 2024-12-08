@@ -149,7 +149,7 @@ class Shape:
         self.make_edge_sequential(self.vertices, True)
         self.area = self.calculate_area()
 
-    def draw(self, screen, color = (0, 255, 0), width = 2):
+    def draw(self, screen, color = (0, 255, 0)):
         if len(self.vertices) > 2:
             pygame.draw.polygon(screen, color, self.vertices)
 
@@ -210,16 +210,16 @@ class Shape:
         return abs(sum)/2
 
 
-    def sutherland_hodgman_clip(self, clip_polygon: List[Tuple[float,float]]) -> List[Tuple[float,float]]:
+    def sutherland_hodgman_clip(self, clip_polygon: 'Shape') -> 'Shape':
         """
-        Sutherland–Hodgman 다각형 클리핑 알고리즘 구현
-        clip_polygon: 클리핑 다각형의 정점 리스트
-        self.vertices: 클리핑 대상 다각형의 정점 리스트
-        반환값: 클리핑 후 남는 다각형의 정점 리스트
+        Sutherland Hodgman 다각형 클리핑 알고리즘 구현
+        self: 클리핑 대상 다각형
+        clip_polygon: 클리핑 다각형
+        반환값: 클리핑 후 남는 다각형
         """
         
         def inside(p: Tuple[float, float], edge: Tuple[Tuple[float,float], Tuple[float,float]]) -> bool:
-            # p가 edge를 기준으로 왼쪽에 위치하는지 판단 (clip_polygon CCW 가정)
+            # p가 edge를 기준으로 왼쪽에 위치하는지 판단 (clip_polygon.edges CCW 가정)
             (A, B) = edge
             return ((B[0]-A[0])*(p[1]-A[1]) - (B[1]-A[1])*(p[0]-A[0])) >= 0
 
@@ -231,9 +231,9 @@ class Shape:
 
         output_list = self.vertices.copy()
         
-        for i in range(len(clip_polygon)):
-            A = clip_polygon[i]
-            B = clip_polygon[(i+1)%len(clip_polygon)]
+        for i in range(len(clip_polygon.edges)):
+            A = clip_polygon.edges[i]
+            B = clip_polygon.edges[(i+1)%len(clip_polygon.edges)]
 
             input_list = output_list
             output_list = []
@@ -259,4 +259,7 @@ class Shape:
         if len(self.vertices) > 1:
             self.make_edge_sequential(self.vertices.copy(), True)
         self.area = self.calculate_area()
-        return output_list
+
+        output_shape = Shape()
+        output_shape.generate_user_shape(output_list)
+        return output_shape

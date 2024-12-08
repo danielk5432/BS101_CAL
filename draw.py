@@ -46,7 +46,7 @@ class Draw:
                 return False
         self.edge.append(e1)
         self.shape.generate_user_shape(self.node)
-        self.shape.draw(self.screen, self.color, self.width)
+        self.shape.draw(self.screen, self.color)
         self.finished = True
         return True
     
