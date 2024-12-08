@@ -53,9 +53,9 @@ class Draw:
     def area(self):
         return self.shape.get_area()
     
-    def intersect_area(self, shape):
-        # check area not implemented
-        area = 0
+    def intersect_area(self, shape: 'Shape') -> float:
+        intersection = self.shape.sutherland_hodgman_clip(shape)
+        area = intersection.calculate_area()
         return area
 
     def reset(self):

@@ -1,6 +1,7 @@
 import numpy as np
 import pygame
 from typing import Tuple, List
+from sutherland_hodgman import sutherland_hodgman_clip
 
 class Edge:
     def __init__(self, p1: Tuple[float, float], p2: Tuple[float, float]):
@@ -96,7 +97,7 @@ class Shape:
     def generate_random_shape(self):
         shapes = ["triangle", "square", "rectangle", "pentagon", "star"]
         #self.type = np.random.choice(shapes) # inactive for test
-        self.type = "star" # active for test
+        self.type = "pentagon" # active for test
         # 중심과 크기 설정
         center_x, center_y = np.random.randint(100, 700), np.random.randint(100, 500)
         size = np.random.randint(50, 100)
@@ -202,6 +203,8 @@ class Shape:
         return intersections, intersecting_edges
     
     def calculate_area(self):
+        if (len(self.vertices) < 3):
+            return 0
         xy = np.array(self.vertices)/10
         xy -= np.array([40, 30])
         sum = 0
@@ -217,50 +220,9 @@ class Shape:
         clip_polygon: 클리핑 다각형 (볼록 다각형 가정)
         반환값: 클리핑 후 남는 다각형
         """
-        
-        def inside(p: Tuple[float, float], edge: Tuple[Tuple[float,float], Tuple[float,float]]) -> bool:
-            # p가 edge를 기준으로 왼쪽에 위치하는지 판단 (clip_polygon CCW 가정)
-            (A, B) = edge
-            return ((B[0]-A[0])*(p[1]-A[1]) - (B[1]-A[1])*(p[0]-A[0])) >= 0
+        output_list = sutherland_hodgman_clip(self.get_vertices(), clip_polygon.get_vertices())
 
-        def compute_intersection(s: Tuple[float,float], p: Tuple[float,float], edge: Tuple[Tuple[float,float], Tuple[float,float]]) -> Tuple[float,float]:
-            # s->p 선분과 edge 선분의 교점 계산
-            e = Edge(*edge)
-            sp_edge = Edge(s, p)
-            return e.intersection_point(sp_edge)
-
-        output_list = self.vertices.copy()
-        clip_polygon_vertices = clip_polygon.get_vertices()
-        
-        for i in range(len(clip_polygon_vertices)):
-            A = clip_polygon_vertices[i]
-            B = clip_polygon_vertices[(i+1)%len(clip_polygon_vertices)]
-
-            input_list = output_list
-            output_list = []
-            if len(input_list) == 0:
-                break
-
-            S = input_list[-1]
-            for P in input_list:
-                if inside(P, (A,B)):
-                    if not inside(S, (A,B)):
-                        I = compute_intersection(S, P, (A,B))
-                        if I is not None:
-                            output_list.append(I)
-                    output_list.append(P)
-                elif inside(S, (A,B)):
-                    I = compute_intersection(S, P, (A,B))
-                    if I is not None:
-                        output_list.append(I)
-                S = P
-
-        self.vertices = output_list
-        self.edges = []
-        if len(self.vertices) > 1:
-            self.make_edge_sequential(self.vertices.copy(), True)
-        self.area = self.calculate_area()
-
-        output_shape = Shape()
-        output_shape.generate_user_shape(output_list)
-        return output_shape
+        new_shape = Shape()
+        if len(output_list) > 0:
+            new_shape.generate_user_shape(output_list)
+        return new_shape
