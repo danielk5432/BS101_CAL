@@ -208,3 +208,55 @@ class Shape:
         for i in range(len(xy)):
             sum += xy[i][0]*xy[(i+1)%len(xy)][1] - xy[i][1]*xy[(i+1)%len(xy)][0]
         return abs(sum)/2
+
+
+    def sutherland_hodgman_clip(self, clip_polygon: List[Tuple[float,float]]) -> List[Tuple[float,float]]:
+        """
+        Sutherland–Hodgman 다각형 클리핑 알고리즘 구현
+        clip_polygon: 클리핑 다각형의 정점 리스트
+        self.vertices: 클리핑 대상 다각형의 정점 리스트
+        반환값: 클리핑 후 남는 다각형의 정점 리스트
+        """
+        
+        def inside(p: Tuple[float, float], edge: Tuple[Tuple[float,float], Tuple[float,float]]) -> bool:
+            # p가 edge를 기준으로 왼쪽에 위치하는지 판단 (clip_polygon CCW 가정)
+            (A, B) = edge
+            return ((B[0]-A[0])*(p[1]-A[1]) - (B[1]-A[1])*(p[0]-A[0])) >= 0
+
+        def compute_intersection(s: Tuple[float,float], p: Tuple[float,float], edge: Tuple[Tuple[float,float], Tuple[float,float]]) -> Tuple[float,float]:
+            # s->p 선분과 edge 선분의 교점 계산
+            e = Edge(*edge)
+            sp_edge = Edge(s, p)
+            return e.intersection_point(sp_edge)
+
+        output_list = self.vertices.copy()
+        
+        for i in range(len(clip_polygon)):
+            A = clip_polygon[i]
+            B = clip_polygon[(i+1)%len(clip_polygon)]
+
+            input_list = output_list
+            output_list = []
+            if len(input_list) == 0:
+                break
+
+            S = input_list[-1]
+            for P in input_list:
+                if inside(P, (A,B)):
+                    if not inside(S, (A,B)):
+                        I = compute_intersection(S, P, (A,B))
+                        if I is not None:
+                            output_list.append(I)
+                    output_list.append(P)
+                elif inside(S, (A,B)):
+                    I = compute_intersection(S, P, (A,B))
+                    if I is not None:
+                        output_list.append(I)
+                S = P
+
+        self.vertices = output_list
+        self.edges = []
+        if len(self.vertices) > 1:
+            self.make_edge_sequential(self.vertices.copy(), True)
+        self.area = self.calculate_area()
+        return output_list
