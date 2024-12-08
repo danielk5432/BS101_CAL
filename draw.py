@@ -1,12 +1,13 @@
 import pygame
 import numpy as np
-from shape import Edge
+from shape import Edge, Shape
 
 class Draw:
     def __init__(self, screen, color = (255, 255, 255), width = 3):
         self.screen = screen
         self.node = []
         self.edge = []
+        self.shape = Shape()
         self.color = color
         self.width = width
         self.finished =False
@@ -44,17 +45,13 @@ class Draw:
                 print("[Error] Last edge is intersecting!")
                 return False
         self.edge.append(e1)
-        pygame.draw.polygon(self.screen, self.color, self.node)
+        self.shape.generate_user_shape(self.node)
+        self.shape.draw(self.screen, self.color, self.width)
         self.finished = True
         return True
     
     def area(self):
-        xy = np.array(self.node)/10
-        xy -= np.array([40, 30])
-        sum = 0
-        for i in range(len(xy)):
-            sum += xy[i][0]*xy[(i+1)%len(xy)][1] - xy[i][1]*xy[(i+1)%len(xy)][0]
-        return abs(sum)/2
+        return self.shape.get_area()
     
     def intersect_area(self, shape):
         # check area not implemented
