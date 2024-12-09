@@ -25,7 +25,7 @@ state = State(screen, font, Width, Height, current_shape, current_draw, draw_try
 
 while running:
 
-    current_shape.draw(screen)
+    #current_shape.draw(screen)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
