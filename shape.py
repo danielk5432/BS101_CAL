@@ -224,6 +224,38 @@ class Shape:
         clip_polygon: 클리핑 다각형 (볼록 다각형 가정)
         반환값: 클리핑 후 남는 다각형
         """
+        def is_circuit_clockwise(points):
+            """
+            Determines if a sequence of points forming a closed circuit is clockwise.
+
+            Parameters:
+            points: List[Tuple[float, float]]
+                A list of points in 2D space, given as (x, y). The last point is implicitly connected to the first.
+
+            Returns:
+            bool
+                True if the circuit is clockwise, False otherwise.
+            """
+            total = 0
+            n = len(points)
+
+            for i in range(n):
+                x1, y1 = points[i]
+                x2, y2 = points[(i + 1) % n]  # Next point (wrapping around to the first)
+
+                # Calculate the signed area contribution
+                total += (x2 - x1) * (y2 + y1)
+
+            # If total > 0, the circuit is counterclockwise; if total < 0, it's clockwise
+            return total < 0
+
+        target_vertices = list(self.get_vertices())
+        clip_vertices = list(clip_polygon.get_vertices())
+        if not is_circuit_clockwise(target_vertices):
+            target_vertices = target_vertices[::-1]
+        if not is_circuit_clockwise(clip_vertices):
+            clip_vertices = clip_vertices[::-1]
+
         clip = PolygonClipper(False)
         output_list = clip(list(self.get_vertices()), list(clip_polygon.get_vertices()))
         if (isinstance(output_list, np.ndarray)):
