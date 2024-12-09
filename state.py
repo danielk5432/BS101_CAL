@@ -5,7 +5,7 @@ from ui import UI
 
 
 class State:
-    def __init__(self, screen, font, Width, Height, shape, draw, check_try):
+    def __init__(self, screen, font, Width, Height, shape, draw, check_try, start_money = 200):
         self.state = "START"
         self.state_list = ["START", "CHECK", "DRAW", "MONEY", "GAMEOVER"]
         self.screen = screen
@@ -17,7 +17,8 @@ class State:
         self.max_check_try = check_try
         self.check_try = 0
         self.ui = UI(screen, font, Width, Height, self)
-        self.money = 1000
+        self.money = start_money
+        self.start_money = start_money
         self.add_money = 0
         self.round = 1
 
@@ -26,7 +27,7 @@ class State:
     
     def new_game(self):
         self.check_try = 0
-        self.money = 1000
+        self.money = self.start_money
         self.round = 1
 
     def get_state(self):
