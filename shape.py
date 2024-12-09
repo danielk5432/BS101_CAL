@@ -1,12 +1,12 @@
 import numpy as np
 import pygame
 from typing import Tuple, List
-from sutherland_hodgman import sutherland_hodgman_clip
+from sutherland_hodgman.SH import PolygonClipper
 
 class Edge:
     def __init__(self, p1: Tuple[float, float], p2: Tuple[float, float]):
-        self.start_point = p1
-        self.end_point = p2
+        self.start_point = (p1[0], p1[1])
+        self.end_point = (p2[0], p2[1])
     def __eq__(self, other: 'Edge'):
         return (self.start_point == other.start_point and self.end_point == other.end_point)
     def __repr__(self):
@@ -96,13 +96,14 @@ class Shape:
         return self.area
 
     def generate_random_shape(self):
-        shapes = ["triangle", "square", "rectangle", "pentagon", "star"]
+        shapes = ["triangle", "square", "rectangle", "pentagon"]
         #self.type = np.random.choice(shapes) # inactive for test
         self.type = "pentagon" # active for test
         # 중심과 크기 설정
         center_x, center_y = np.random.randint(100, 700), np.random.randint(100, 500)
         size = np.random.randint(50, 100)
 
+        # clockwise order
         if self.type == "triangle":
             self.vertices = [
                 (center_x, center_y - size),
@@ -112,37 +113,37 @@ class Shape:
         elif self.type == "square":
             self.vertices = [
                 (center_x - size, center_y - size),
-                (center_x + size, center_y - size),
-                (center_x + size, center_y + size),
                 (center_x - size, center_y + size),
+                (center_x + size, center_y + size),
+                (center_x + size, center_y - size)
             ]
         elif self.type == "rectangle":
             self.vertices = [
                 (center_x - size, center_y - size // 2),
-                (center_x + size, center_y - size // 2),
-                (center_x + size, center_y + size // 2),
                 (center_x - size, center_y + size // 2),
+                (center_x + size, center_y + size // 2),
+                (center_x + size, center_y - size // 2)
             ]
         elif self.type == "pentagon":
             angle = np.linspace(0, 2 * np.pi, 6)
-            self.vertices = [(center_x + size * np.cos(a), center_y + size * np.sin(a)) for a in angle[:-1]]
-        elif self.type == "star":
-            outer_radius = size
-            inner_radius = outer_radius * np.sin(np.radians(18)) / np.cos(np.radians(36))  # 정오각형 별의 경우
+            self.vertices = [(center_x + size * np.cos(a), center_y + size * np.sin(a)) for a in angle[-1::-1]]
+        # elif self.type == "star":
+        #     outer_radius = size
+        #     inner_radius = outer_radius * np.sin(np.radians(18)) / np.cos(np.radians(36))  # 정오각형 별의 경우
 
-            # 꼭짓점 계산
-            self.vertices = [
-                (center_x + outer_radius, center_y),  # 꼭짓점 1 (외곽)
-                (center_x + inner_radius * np.sin(np.radians(54)), center_y - inner_radius * np.cos(np.radians(54))),  # 꼭짓점 2 (내부)
-                (center_x + outer_radius * np.sin(np.radians(18)), center_y - outer_radius * np.cos(np.radians(18))),  # 꼭짓점 3 (외곽)
-                (center_x + inner_radius * np.sin(np.radians(-18)), center_y - inner_radius * np.cos(np.radians(-18))),  # 꼭짓점 4 (내부)
-                (center_x + outer_radius * np.sin(np.radians(-54)), center_y - outer_radius * np.cos(np.radians(-54))),  # 꼭짓점 5 (외곽)
-                (center_x + inner_radius * np.sin(np.radians(-90)), center_y - inner_radius * np.cos(np.radians(-90))),  # 꼭짓점 6 (내부)
-                (center_x + outer_radius * np.sin(np.radians(-126)), center_y - outer_radius * np.cos(np.radians(-126))),  # 꼭짓점 7 (외곽)
-                (center_x + inner_radius * np.sin(np.radians(-162)), center_y - inner_radius * np.cos(np.radians(-162))),  # 꼭짓점 8 (내부)
-                (center_x + outer_radius * np.sin(np.radians(-198)), center_y - outer_radius * np.cos(np.radians(-198))),  # 꼭짓점 9 (외곽)
-                (center_x + inner_radius * np.sin(np.radians(-234)), center_y - inner_radius * np.cos(np.radians(-234))),  # 꼭짓점 10 (내부)
-            ]
+        #     # 꼭짓점 계산
+        #     self.vertices = [
+        #         (center_x + outer_radius, center_y),  # 꼭짓점 1 (외곽)
+        #         (center_x + inner_radius * np.sin(np.radians(54)), center_y - inner_radius * np.cos(np.radians(54))),  # 꼭짓점 2 (내부)
+        #         (center_x + outer_radius * np.sin(np.radians(18)), center_y - outer_radius * np.cos(np.radians(18))),  # 꼭짓점 3 (외곽)
+        #         (center_x + inner_radius * np.sin(np.radians(-18)), center_y - inner_radius * np.cos(np.radians(-18))),  # 꼭짓점 4 (내부)
+        #         (center_x + outer_radius * np.sin(np.radians(-54)), center_y - outer_radius * np.cos(np.radians(-54))),  # 꼭짓점 5 (외곽)
+        #         (center_x + inner_radius * np.sin(np.radians(-90)), center_y - inner_radius * np.cos(np.radians(-90))),  # 꼭짓점 6 (내부)
+        #         (center_x + outer_radius * np.sin(np.radians(-126)), center_y - outer_radius * np.cos(np.radians(-126))),  # 꼭짓점 7 (외곽)
+        #         (center_x + inner_radius * np.sin(np.radians(-162)), center_y - inner_radius * np.cos(np.radians(-162))),  # 꼭짓점 8 (내부)
+        #         (center_x + outer_radius * np.sin(np.radians(-198)), center_y - outer_radius * np.cos(np.radians(-198))),  # 꼭짓점 9 (외곽)
+        #         (center_x + inner_radius * np.sin(np.radians(-234)), center_y - inner_radius * np.cos(np.radians(-234))),  # 꼭짓점 10 (내부)
+        #     ]
         self.make_edge_sequential(self.vertices.copy(), True)
         self.area = self.calculate_area()
 
@@ -151,10 +152,12 @@ class Shape:
         self.make_edge_sequential(self.vertices, True)
         self.area = self.calculate_area()
 
-    def draw(self, screen, color = (0, 255, 0)):
+    def draw(self, screen, color = (0, 255, 0), fill = False):
         if len(self.vertices) > 2:
-            # pygame.draw.polygon(screen, color, self.vertices)
-            pygame.draw.polygon(screen, color, self.vertices, width=3) # for test
+            if fill:
+                pygame.draw.polygon(screen, color, self.vertices)
+            else:
+                pygame.draw.polygon(screen, color, self.vertices, width=3)
 
     def make_edge(self, p1: Tuple[float, float], p2: Tuple[float, float]) -> 'Edge':
         """두 점으로 Edge 생성하고 리스트에 추가한 뒤 추가된 Edge 반환"""
@@ -222,9 +225,12 @@ class Shape:
         clip_polygon: 클리핑 다각형 (볼록 다각형 가정)
         반환값: 클리핑 후 남는 다각형
         """
-        output_list = sutherland_hodgman_clip(self.get_vertices(), clip_polygon.get_vertices())
+        clip = PolygonClipper()
+        output_list = clip(list(self.get_vertices()), list(clip_polygon.get_vertices()))
+        if (isinstance(output_list, np.ndarray)):
+            output_list = output_list.tolist()
         new_shape = Shape(self.screen)
         if len(output_list) > 0:
             new_shape.generate_user_shape(output_list)
-        new_shape.draw(self.screen, (255,0,0)) # for test
+        new_shape.draw(self.screen, (255,0,0), fill=True) # for test
         return new_shape
