@@ -13,6 +13,9 @@ screen = pygame.display.set_mode((Width, Height))
 clock = pygame.time.Clock()
 draw_try = 5
 
+# Debug
+click_type = ["Left Click", "Middle Click", "Right Click"]
+
 # 게임 루프
 running = True
 current_shape = Shape(screen)
@@ -43,7 +46,8 @@ while running:
 
         if state == "CHECK":
             if event.type == pygame.MOUSEBUTTONDOWN:
-                print(event.button) # 1:left 2:middle 3:right
+                if event.button in [1,2,3]:
+                    print(click_type[event.button-1]) 
                 if event.button == 2:
                     state.reset()
                 if event.button == 1:
@@ -52,18 +56,24 @@ while running:
                 if event.button == 3:
                     if current_draw.finish_shape():
                         state.print_draw_area()
-        if state == "DRAW":
+        elif state == "DRAW":
             if event.type == pygame.MOUSEBUTTONDOWN:
-                print(event.button) # 1:left 2:middle 3:right
+                if event.button in [0,1,2]:
+                    print(click_type[event.button-1]) 
+                if event.button == 2:
+                    state.reset()
                 if event.button == 1:
                     x, y = pygame.mouse.get_pos()
                     current_draw.node_add(x, y)
                 if event.button == 3:
                     if current_draw.finish_shape():
                         state.print_draw_area()
-                        state.change_state("ADJUSTMENT")
-        if state == "ADJUSTMENT":
-            state.change_state("DRAW")
+        elif state == "MONEY":
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button in [0,1,2]:
+                    print(click_type[event.button-1]) 
+                if event.button == 2:
+                    state.reset()
             
 
     pygame.display.flip()

@@ -52,7 +52,7 @@ class Draw:
                 return False
         self.edge.append(e1)  # 마지막 선 추가
         self.shape.generate_user_shape(self.node)  # 도형 생성
-        self.shape.draw(self.screen, self.color)  # 화면에 도형 그림
+        self.shape.draw(self.screen, self.color, fill=True)  # 화면에 도형 그림
         self.finished = True
         return True
 

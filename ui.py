@@ -20,7 +20,7 @@ class UI:
         self.start_text = font.render("Press SPACE to Start", True, (255, 255, 255))
         self.end_text = font.render("GAME OVER! Press SPACE to Restart", True, (255, 255, 255))
 
-        # Score and Round
+        self.money_text = ""
 
 
     def update(self):
@@ -39,11 +39,14 @@ class UI:
         if self.state == "START":
             self.screen.blit(self.start_text, (self.width // 2 - 150, self.height // 2))
 
-        elif self.state == "CHECK" or self.state == "DRAW":
-            self.draw_ui_panel()
-
         elif self.state == "GAMEOVER":
             self.screen.blit(self.end_text, (self.width // 2 - 250, self.height // 2))
+
+        elif self.state == "MONEY":
+            text = self.font.render(self.money_text, True, (255, 255, 255))
+            self.screen.blit(text, (self.width // 2 - 250, self.height // 2))
+        else:
+            self.draw_ui_panel()
 
     def print_draw_area(self, draw, shape):
         area = draw.area()
@@ -52,6 +55,9 @@ class UI:
         self.screen.blit(text, (20 , 5))
         text = self.font.render(f'Intersect Area: %d'%intersect_area, True, (255, 255, 255))
         self.screen.blit(text, (20 , 50))
+        percent = intersect_area / area * 100
+        text = self.font.render(f'Intersect Percent: %.2f %%'%percent, True, (255, 255, 255))
+        self.screen.blit(text, (20 ,95))
 
     def state_update(self):
         self.state = self.state_obj.get_state()

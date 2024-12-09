@@ -97,10 +97,9 @@ class Shape:
 
     def generate_random_shape(self):
         shapes = ["triangle", "square", "rectangle", "pentagon"]
-        #self.type = np.random.choice(shapes) # inactive for test
-        self.type = "pentagon" # active for test
+        self.type = np.random.choice(shapes)
         # 중심과 크기 설정
-        center_x, center_y = np.random.randint(100, 700), np.random.randint(100, 500)
+        center_x, center_y = np.random.randint(100, 500), np.random.randint(100, 500)
         size = np.random.randint(50, 100)
 
         # clockwise order

@@ -7,7 +7,7 @@ from ui import UI
 class State:
     def __init__(self, screen, font, Width, Height, shape, draw, check_try):
         self.state = "START"
-        self.state_list = ["START", "CHECK", "DRAW", "ADJUSTMENT", "GAMEOVER"]
+        self.state_list = ["START", "CHECK", "DRAW", "MONEY", "GAMEOVER"]
         self.screen = screen
         self.font = font
         self.width = Width
@@ -18,6 +18,7 @@ class State:
         self.check_try = 0
         self.ui = UI(screen, font, Width, Height, self)
         self.money = 1000
+        self.add_money = 0
         self.round = 1
 
         # start screen
@@ -39,33 +40,51 @@ class State:
         return f"State({self.state})"
     
     def reset(self):
-        
+        print("State Reset")
         if self.state == "START":
             pass
-        if self.state == "CHECK":
+        elif self.state == "CHECK":
             self.draw.reset()
             if self.check_left() == 0:
+                self.check_try = 0
                 self.change_state("DRAW")
-        if self.state == "DRAW":
+        elif self.state == "DRAW":
             self.draw.reset()
-        if self.state == "GAMEOVER":
+
+            # calculate money and print
+            intersect = self.draw.intersect_area(self.shape)
+            area = self.draw.area()
+            self.add_money = intersect * 1.5 - area
+            self.ui.money_text = str(int(intersect)) + " * 1.5 - " + str(int(area)) + " = " + str(int(self.add_money)) + " money added"
+            self.change_state("MONEY")
+        elif self.state == "MONEY":
+            self.money += self.add_money
+            if self.money <= 0:
+                self.change_state("GAMEOVER")
+            else:
+                self.shape.generate_random_shape()
+                self.change_state("CHECK")
+        elif self.state == "GAMEOVER":
             pass
-        if self.state == "ADJUSTMENT":
-            pass
+
         self.ui.update()
+
     def change_state(self, other):
+        print("STATE CHANGE : " + self.state)
         if isinstance(other, str) and other in self.state_list:
             self.state = other
-            if self.state == "ADJUSTMENT":
-                return
-            self.reset()
+            self.ui.update()
 
     def print_draw_area(self):
         self.ui.print_draw_area(self.draw, self.shape)
-        self.check_try += 1
+        if self.state == "CHECK":
+            self.check_try += 1
     
     def check_left(self):
         return self.max_check_try - self.check_try
+    
+    def change_money(self):
+        pass
 """
     def update_draw(self, draw):
         self.draw = draw
