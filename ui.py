@@ -21,8 +21,7 @@ class UI:
         self.end_text = font.render("GAME OVER! Press SPACE to Restart", True, (255, 255, 255))
 
         # Score and Round
-        self.score = 1000
-        self.round = 1
+
 
     def update(self):
         self.state_update()
@@ -40,7 +39,7 @@ class UI:
         if self.state == "START":
             self.screen.blit(self.start_text, (self.width // 2 - 150, self.height // 2))
 
-        elif self.state == "CHECK":
+        elif self.state == "CHECK" or self.state == "DRAW":
             self.draw_ui_panel()
 
         elif self.state == "GAMEOVER":
@@ -58,24 +57,42 @@ class UI:
         self.state = self.state_obj.get_state()
 
     def draw_ui_panel(self):
+        text_space = 20
         # Display score
-        score_text = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
-        self.screen.blit(score_text, (self.game_width + 20, 20))
+        score_text = self.font.render(f"Score: {self.state_obj.money}", True, (255, 255, 255))
+        self.screen.blit(score_text, (self.game_width + text_space, 20))
 
         # Display round
-        round_text = self.font.render(f"Round: {self.round}", True, (255, 255, 255))
-        self.screen.blit(round_text, (self.game_width + 20, 60))
+        round_text = self.font.render(f"Round: {self.state_obj.round}", True, (255, 255, 255))
+        self.screen.blit(round_text, (self.game_width + text_space, 60))
 
+        state_text = self.font.render("State", True, (255, 255, 255))
+        self.screen.blit(state_text, (self.game_width + text_space, 100))
+
+        state_text = self.font.render(self.state, True, (255, 255, 255))
+        self.screen.blit(state_text, (self.game_width + text_space, 140))
+
+        if self.state == "CHECK":
+            check_left_text = self.font.render("Check Left", True, (255, 255, 255))
+            self.screen.blit(check_left_text, (self.game_width + text_space, 180))
+
+            check_left_text = self.font.render(str(self.state_obj.check_left()), True, (255, 255, 255))
+            self.screen.blit(check_left_text, (self.game_width + text_space, 220))
+
+        """
         # Display scoring multipliers
         multiplier_text = self.font.render("Multipliers:", True, (255, 255, 255))
         self.screen.blit(multiplier_text, (self.game_width + 20, 120))
 
+        
+    
         shapes = ["Square", "Rectangle", "Circle", "Triangle", "Star"]
         multipliers = [1, 2, 3, 5, 10]
 
         for i, (shape, multiplier) in enumerate(zip(shapes, multipliers)):
             shape_text = self.font.render(f"{shape}: x{multiplier}", True, (255, 255, 255))
             self.screen.blit(shape_text, (self.game_width + 20, 160 + i * 40))
+"""
 
     def increment_score(self, points):
         self.score += points

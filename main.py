@@ -32,6 +32,7 @@ while running:
                 running = False
 
             if (state == "START" or state == "GAMEOVER") and event.key == pygame.K_SPACE:
+                state.new_game()
                 state.change_state("CHECK")
                 current_shape.generate_random_shape()
 
@@ -51,6 +52,18 @@ while running:
                 if event.button == 3:
                     if current_draw.finish_shape():
                         state.print_draw_area()
+        if state == "DRAW":
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print(event.button) # 1:left 2:middle 3:right
+                if event.button == 1:
+                    x, y = pygame.mouse.get_pos()
+                    current_draw.node_add(x, y)
+                if event.button == 3:
+                    if current_draw.finish_shape():
+                        state.print_draw_area()
+                        state.change_state("ADJUSTMENT")
+        if state == "ADJUSTMENT":
+            state.change_state("DRAW")
             
 
     pygame.display.flip()
