@@ -68,6 +68,7 @@ while running:
                 if event.button == 3:
                     if current_draw.finish_shape():
                         state.print_draw_area()
+                        current_shape.draw(screen)
         elif state == "MONEY":
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button in [0,1,2]:

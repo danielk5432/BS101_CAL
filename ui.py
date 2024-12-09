@@ -51,6 +51,8 @@ class UI:
     def print_draw_area(self, draw, shape):
         area = draw.area()
         intersect_area = draw.intersect_area(shape)
+        if self.state_obj.state != "CHECK":
+            draw.intersection.draw(self.screen, (255,0,0), fill=True) # for test
         text = self.font.render(f'Area: %d'%area, True, (255, 255, 255))
         self.screen.blit(text, (20 , 5))
         text = self.font.render(f'Intersect Area: %d'%intersect_area, True, (255, 255, 255))

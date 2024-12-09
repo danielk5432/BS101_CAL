@@ -62,8 +62,8 @@ class Draw:
 
     def intersect_area(self, shape: 'Shape') -> float:
         """겹치는 면적 계산"""
-        intersection = self.shape.sutherland_hodgman_clip(shape)  # 겹치는 영역 클리핑
-        area = intersection.calculate_area()  # 면적 계산
+        self.intersection = self.shape.sutherland_hodgman_clip(shape)  # 겹치는 영역 클리핑
+        area = self.intersection.calculate_area()  # 면적 계산
         return area
 
     """

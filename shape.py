@@ -231,5 +231,5 @@ class Shape:
         new_shape = Shape(self.screen)
         if len(output_list) > 0:
             new_shape.generate_user_shape(output_list)
-        new_shape.draw(self.screen, (255,0,0), fill=True) # for test
+        # new_shape.draw(self.screen, (255,0,0), fill=True) # for test
         return new_shape
