@@ -3,7 +3,7 @@ import numpy as np
 from shape import Edge, Shape
 
 class Draw:
-    def __init__(self, screen, color=(255, 255, 255), width=3, money=1000, overlap_rate=0.5):
+    def __init__(self, screen, color=(100, 100, 100), width=3, money=1000, overlap_rate=0.5):
         self.screen = screen
         self.node = []  # 점 리스트
         self.edge = []  # 선 리스트
