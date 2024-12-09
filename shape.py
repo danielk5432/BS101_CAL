@@ -225,7 +225,7 @@ class Shape:
         clip_polygon: 클리핑 다각형 (볼록 다각형 가정)
         반환값: 클리핑 후 남는 다각형
         """
-        clip = PolygonClipper()
+        clip = PolygonClipper(False)
         output_list = clip(list(self.get_vertices()), list(clip_polygon.get_vertices()))
         if (isinstance(output_list, np.ndarray)):
             output_list = output_list.tolist()
