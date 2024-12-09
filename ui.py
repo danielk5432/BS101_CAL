@@ -46,6 +46,14 @@ class UI:
         elif self.state == "GAMEOVER":
             self.screen.blit(self.end_text, (self.width // 2 - 250, self.height // 2))
 
+    def print_draw_area(self, draw, shape):
+        area = draw.area()
+        intersect_area = draw.intersect_area(shape)
+        text = self.font.render(f'Area: %d'%area, True, (255, 255, 255))
+        self.screen.blit(text, (20 , 5))
+        text = self.font.render(f'Intersect Area: %d'%intersect_area, True, (255, 255, 255))
+        self.screen.blit(text, (20 , 50))
+
     def state_update(self):
         self.state = self.state_obj.get_state()
 
