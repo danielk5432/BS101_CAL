@@ -22,7 +22,7 @@ current_shape = Shape(screen)
 current_draw = Draw(screen)
 
 state = State(screen, font, Width, Height, current_shape, current_draw, draw_try)
-
+mouse_down = False
 while running:
 
     #current_shape.draw(screen)
@@ -54,10 +54,18 @@ while running:
                     state.reset()
                 if event.button == 1:
                     x, y = pygame.mouse.get_pos()
+                    mouse_down = True
                     current_draw.node_add(x, y)
                 if event.button == 3:
                     if current_draw.finish_shape():
                         state.print_draw_area()
+            elif event.type == pygame.MOUSEMOTION:
+                if mouse_down:  # 왼쪽 버튼을 누른 상태에서 움직임
+                    x, y = pygame.mouse.get_pos()
+                    current_draw.node_add(x, y)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:  # 왼쪽 버튼에서 손 뗌
+                    mouse_down = False
         elif state == "DRAW":
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button in [0,1,2]:
@@ -66,11 +74,19 @@ while running:
                     state.reset()
                 if event.button == 1:
                     x, y = pygame.mouse.get_pos()
+                    mouse_down = True
                     current_draw.node_add(x, y)
                 if event.button == 3:
                     if current_draw.finish_shape():
                         state.print_draw_area()
                         current_shape.draw(screen)
+            elif event.type == pygame.MOUSEMOTION:
+                if mouse_down:  # 왼쪽 버튼을 누른 상태에서 움직임
+                    x, y = pygame.mouse.get_pos()
+                    current_draw.node_add(x, y)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:  # 왼쪽 버튼에서 손 뗌
+                    mouse_down = False
         elif state == "MONEY":
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button in [0,1,2]:
