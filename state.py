@@ -60,6 +60,7 @@ class State:
             self.change_state("MONEY")
         elif self.state == "MONEY":
             self.money += self.add_money
+            self.round += 1
             if self.money <= 0:
                 self.change_state("GAMEOVER")
             else:
