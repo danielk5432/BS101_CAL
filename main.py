@@ -42,7 +42,9 @@ while running:
             # GAMEOVER DEBUG
             if event.key == pygame.K_0:
                 state.change_state("GAMEOVER")
-                
+        
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and state in ["CHECK", "DRAW", "MONEY"]:
+            state.reset()
 
         if state == "CHECK":
             if event.type == pygame.MOUSEBUTTONDOWN:
