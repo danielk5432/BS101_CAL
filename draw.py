@@ -17,7 +17,9 @@ class Draw:
     def node_add(self, x, y):
         """플레이어가 점을 추가할 때 호출"""
         p1 = (x, y)
-        
+        if p1 in self.node:
+            print("[Error] Node already added!")
+            return
         if len(self.node) > 0:  # 기존에 점이 있다면 선을 연결
             p2 = self.node[-1]
             e = Edge(p1, p2)
