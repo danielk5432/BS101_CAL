@@ -29,9 +29,11 @@ class Draw:
             else:
                 print("[Error] Edge is intersecting!")
                 return
+        else:
+            pygame.draw.circle(self.screen, self.color, p1, self.width)
         
         self.node.append(p1)
-        pygame.draw.circle(self.screen, self.color, p1, self.width)  # 점을 화면에 그림
+        #pygame.draw.circle(self.screen, self.color, p1, self.width)  # 점을 화면에 그림
 
     def check_edge(self, e1):
         """교차 여부를 확인"""
