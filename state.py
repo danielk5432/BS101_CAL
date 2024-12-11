@@ -21,6 +21,7 @@ class State:
         self.start_money = start_money
         self.add_money = 0
         self.round = 1
+        self.multiplier = 2
 
         # start screen
         self.reset()
@@ -54,8 +55,8 @@ class State:
             if self.draw.finished:
                 intersect = self.draw.intersect_area(self.shape)
                 area = self.draw.area()
-                self.add_money = intersect * 2 - area
-                self.ui.money_text = str(int(intersect)) + " * 2 - " + str(int(area)) + " = " + str(int(self.add_money)) + " money added"
+                self.add_money = intersect * self.multiplier - area
+                self.ui.money_text = str(int(intersect)) + " * " + str(self.multiplier) + " - " + str(int(area)) + " = " + str(int(self.add_money)) + " money added"
                 self.change_state("MONEY")
             self.draw.reset()
         elif self.state == "MONEY":
