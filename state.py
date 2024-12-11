@@ -50,8 +50,6 @@ class State:
                 self.check_try = 0
                 self.change_state("DRAW")
         elif self.state == "DRAW":
-            self.draw.reset()
-
             # calculate money and print
             if self.draw.finished:
                 intersect = self.draw.intersect_area(self.shape)
@@ -59,6 +57,7 @@ class State:
                 self.add_money = intersect * 2 - area
                 self.ui.money_text = str(int(intersect)) + " * 2 - " + str(int(area)) + " = " + str(int(self.add_money)) + " money added"
                 self.change_state("MONEY")
+            self.draw.reset()
         elif self.state == "MONEY":
             self.money += self.add_money
             self.round += 1
@@ -86,8 +85,6 @@ class State:
     def check_left(self):
         return self.max_check_try - self.check_try
     
-    def change_money(self):
-        pass
 """
     def update_draw(self, draw):
         self.draw = draw
