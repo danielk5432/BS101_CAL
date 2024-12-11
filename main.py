@@ -52,11 +52,11 @@ while running:
                     print(click_type[event.button-1]) 
                 if event.button == 2 or current_draw.finished:
                     state.reset()
-                if event.button == 1:
+                elif event.button == 1:
                     x, y = pygame.mouse.get_pos()
                     mouse_down = True
                     current_draw.node_add(x, y)
-                if event.button == 3:
+                elif event.button == 3:
                     if current_draw.finish_shape():
                         state.print_draw_area()
             elif event.type == pygame.MOUSEMOTION:
@@ -72,11 +72,11 @@ while running:
                     print(click_type[event.button-1]) 
                 if event.button == 2 or current_draw.finished:
                     state.reset()
-                if event.button == 1:
+                elif event.button == 1:
                     x, y = pygame.mouse.get_pos()
                     mouse_down = True
                     current_draw.node_add(x, y)
-                if event.button == 3:
+                elif event.button == 3:
                     if current_draw.finish_shape():
                         state.print_draw_area()
                         current_shape.draw(screen)

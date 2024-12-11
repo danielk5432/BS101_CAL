@@ -53,11 +53,12 @@ class State:
             self.draw.reset()
 
             # calculate money and print
-            intersect = self.draw.intersect_area(self.shape)
-            area = self.draw.area()
-            self.add_money = intersect * 2 - area
-            self.ui.money_text = str(int(intersect)) + " * 2 - " + str(int(area)) + " = " + str(int(self.add_money)) + " money added"
-            self.change_state("MONEY")
+            if self.draw.finished:
+                intersect = self.draw.intersect_area(self.shape)
+                area = self.draw.area()
+                self.add_money = intersect * 2 - area
+                self.ui.money_text = str(int(intersect)) + " * 2 - " + str(int(area)) + " = " + str(int(self.add_money)) + " money added"
+                self.change_state("MONEY")
         elif self.state == "MONEY":
             self.money += self.add_money
             self.round += 1
