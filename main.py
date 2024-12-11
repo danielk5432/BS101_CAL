@@ -50,7 +50,7 @@ while running:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button in [1,2,3]:
                     print(click_type[event.button-1]) 
-                if event.button == 2:
+                if event.button == 2 or current_draw.finished:
                     state.reset()
                 if event.button == 1:
                     x, y = pygame.mouse.get_pos()
@@ -70,7 +70,7 @@ while running:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button in [0,1,2]:
                     print(click_type[event.button-1]) 
-                if event.button == 2:
+                if event.button == 2 or current_draw.finished:
                     state.reset()
                 if event.button == 1:
                     x, y = pygame.mouse.get_pos()
@@ -90,8 +90,7 @@ while running:
         elif state == "MONEY":
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button in [0,1,2]:
-                    print(click_type[event.button-1]) 
-                if event.button == 2:
+                    print(click_type[event.button-1])
                     state.reset()
             
 
